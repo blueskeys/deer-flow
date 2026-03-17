@@ -157,6 +157,15 @@ echo "  DeerFlow Production Deployment"
 echo "=========================================="
 echo ""
 
+# ── MIRROR_REGION ─────────────────────────────────────────────────────────────
+
+if [ -z "$MIRROR_REGION" ]; then
+    export MIRROR_REGION="cn"
+    echo -e "${BLUE}Using China mirrors (MIRROR_REGION=cn) for faster builds${NC}"
+    echo -e "${BLUE}To use official sources: MIRROR_REGION= make up${NC}"
+    echo ""
+fi
+
 # ── Step 1: Detect sandbox mode ──────────────────────────────────────────────
 
 sandbox_mode="$(detect_sandbox_mode)"

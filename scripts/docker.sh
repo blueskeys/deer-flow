@@ -102,6 +102,14 @@ start() {
     echo "=========================================="
     echo ""
 
+    # Set MIRROR_REGION default to "cn" for faster builds in China
+    if [ -z "$MIRROR_REGION" ]; then
+        export MIRROR_REGION="cn"
+        echo -e "${BLUE}Using China mirrors (MIRROR_REGION=cn) for faster builds${NC}"
+        echo -e "${BLUE}To use official sources: MIRROR_REGION= make docker-start${NC}"
+        echo ""
+    fi
+
     sandbox_mode="$(detect_sandbox_mode)"
 
     if [ "$sandbox_mode" = "provisioner" ]; then

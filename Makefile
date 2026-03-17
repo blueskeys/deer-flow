@@ -29,9 +29,9 @@ help:
 	@echo "  make docker-logs-frontend - View Docker frontend logs"
 	@echo "  make docker-logs-gateway - View Docker gateway logs"
 	@echo ""
-	@echo "Docker Build Optimization (for China):"
-	@echo "  MIRROR_REGION=cn make docker-start  - Use China mirrors for faster builds"
-	@echo "  Or set MIRROR_REGION=cn in .env file"
+	@echo "Docker Build Optimization:"
+	@echo "  Default uses China mirrors (MIRROR_REGION=cn) for faster builds"
+	@echo "  Use official sources: MIRROR_REGION= make docker-start"
 
 config:
 	@$(PYTHON) ./scripts/configure.py
