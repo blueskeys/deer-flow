@@ -1,0 +1,10 @@
+# 构建产物
+images/*.tar
+
+# 打包文件
+*.tar.gz
+*.zip
+
+# 临时文件
+*.tmp
+*.log

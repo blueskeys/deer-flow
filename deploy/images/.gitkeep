@@ -1,0 +1,7 @@
+# 此目录用于存放构建后的 Docker 镜像
+#
+# 执行 build.cmd 后会生成以下文件:
+#   - deer-flow-frontend.tar
+#   - deer-flow-backend.tar
+#   - nginx.tar
+#   - sandbox.tar (可选)

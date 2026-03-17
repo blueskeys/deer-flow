@@ -30,9 +30,6 @@
 
 {EXECUTIVE_SUMMARY}
 
-**IMPORTANT**: Include inline citations using `[citation:Title](URL)` format after each claim. Example:
-"The project gained 10k stars in 3 months [citation:GitHub Stats](https://github.com/owner/repo)."
-
 ---
 
 ## Complete Chronological Timeline
@@ -58,8 +55,6 @@
 ---
 
 ## Key Analysis
-
-**IMPORTANT**: Support each analysis point with inline citations `[citation:Title](URL)`.
 
 ### {ANALYSIS_SECTION_1_TITLE}
 

@@ -4,12 +4,19 @@
 #   --target prod  — full build baked in, run `pnpm start` at container start (default if no --target is specified)
 
 ARG PNPM_STORE_PATH=/root/.local/share/pnpm/store
+# Set to "cn" to use China npm mirror (npmmirror), empty for official registry
+ARG MIRROR_REGION=
 
 # ── Base: shared setup ────────────────────────────────────────────────────────
 FROM node:22-alpine AS base
 ARG PNPM_STORE_PATH
+ARG MIRROR_REGION
 RUN corepack enable && corepack install -g pnpm@10.26.2
 RUN pnpm config set store-dir ${PNPM_STORE_PATH}
+# Configure npm registry for China if MIRROR_REGION=cn
+RUN if [ "$MIRROR_REGION" = "cn" ]; then \
+    pnpm config set registry https://registry.npmmirror.com; \
+    fi
 WORKDIR /app
 COPY frontend ./frontend
 

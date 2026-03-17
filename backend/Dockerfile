@@ -2,16 +2,32 @@
 FROM python:3.12-slim
 
 ARG NODE_MAJOR=22
+# Set to "cn" to use China mirrors, empty for official sources
+ARG MIRROR_REGION=
+
+# Configure China mirrors for faster builds in China
+RUN if [ "$MIRROR_REGION" = "cn" ]; then \
+    # Use Aliyun Debian mirror
+    sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list.d/debian.sources \
+    && sed -i 's/security.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list.d/debian.sources; \
+    fi
 
 # Install system dependencies + Node.js (provides npx for MCP servers)
+# Use npmmirror for Node.js in China
 RUN apt-get update && apt-get install -y \
     curl \
     build-essential \
     gnupg \
     ca-certificates \
     && mkdir -p /etc/apt/keyrings \
-    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key -o /etc/apt/keyrings/nodesource.gpg \
-    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" > /etc/apt/sources.list.d/nodesource.list \
+    && if [ "$MIRROR_REGION" = "cn" ]; then \
+    # Use npmmirror (Taobao) for Node.js in China
+    curl -fsSL https://npmmirror.com/mirrors/node/pubkey/nodejs-release.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://npmmirror.com/mirrors/node/deb/node_${NODE_MAJOR}.x nodistro main" > /etc/apt/sources.list.d/nodesource.list; \
+    else \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" > /etc/apt/sources.list.d/nodesource.list; \
+    fi \
     && apt-get update \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
