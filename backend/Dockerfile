@@ -31,9 +31,6 @@ COPY --from=docker:cli /usr/local/bin/docker /usr/local/bin/docker
 # Install uv from a pinned versioned image (avoids curl|sh from untrusted remote)
 COPY --from=ghcr.io/astral-sh/uv:0.7.20 /uv /uvx /usr/local/bin/
 
-# Configure PyPI mirror for China (uv uses UV_INDEX_URL env var)
-ENV UV_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
-
 # Set working directory
 WORKDIR /app
 
@@ -41,8 +38,12 @@ WORKDIR /app
 COPY backend ./backend
 
 # Install dependencies with cache mount
+# Configure PyPI mirror for China region
 RUN --mount=type=cache,target=/root/.cache/uv \
-    sh -c "cd backend && uv sync"
+    if [ "$MIRROR_REGION" = "cn" ]; then \
+        export UV_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple; \
+    fi \
+    && cd backend && uv sync
 
 # Expose ports (gateway: 8001, langgraph: 2024)
 EXPOSE 8001 2024
