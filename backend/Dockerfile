@@ -13,19 +13,17 @@ RUN if [ "$MIRROR_REGION" = "cn" ]; then \
     fi
 
 # Install system dependencies + Node.js (provides npx for MCP servers)
-# Use npmmirror for Node.js in China
 RUN apt-get update && apt-get install -y \
     curl \
     build-essential \
     gnupg \
     ca-certificates \
     && mkdir -p /etc/apt/keyrings \
-    # Use official NodeSource GPG key (globally accessible), npmmirror only for apt repo
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
     && if [ "$MIRROR_REGION" = "cn" ]; then \
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://npmmirror.com/mirrors/node/deb/node_${NODE_MAJOR}.x nodistro main" > /etc/apt/sources.list.d/nodesource.list; \
+        echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://npmmirror.com/mirrors/node/deb/node_${NODE_MAJOR}.x nodistro main" > /etc/apt/sources.list.d/nodesource.list; \
     else \
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" > /etc/apt/sources.list.d/nodesource.list; \
+        echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" > /etc/apt/sources.list.d/nodesource.list; \
     fi \
     && apt-get update \
     && apt-get install -y nodejs \
