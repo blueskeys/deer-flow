@@ -20,13 +20,12 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     ca-certificates \
     && mkdir -p /etc/apt/keyrings \
+    # Use official NodeSource GPG key (globally accessible), npmmirror only for apt repo
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
     && if [ "$MIRROR_REGION" = "cn" ]; then \
-    # Use npmmirror (Taobao) for Node.js in China
-    curl -fsSL https://npmmirror.com/mirrors/node/pubkey/nodejs-release.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
-    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://npmmirror.com/mirrors/node/deb/node_${NODE_MAJOR}.x nodistro main" > /etc/apt/sources.list.d/nodesource.list; \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://npmmirror.com/mirrors/node/deb/node_${NODE_MAJOR}.x nodistro main" > /etc/apt/sources.list.d/nodesource.list; \
     else \
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key -o /etc/apt/keyrings/nodesource.gpg \
-    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" > /etc/apt/sources.list.d/nodesource.list; \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" > /etc/apt/sources.list.d/nodesource.list; \
     fi \
     && apt-get update \
     && apt-get install -y nodejs \
